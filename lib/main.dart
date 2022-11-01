@@ -1,341 +1,185 @@
-import 'package:blog_club/carousel/carousel_slider.dart';
-import 'package:blog_club/data.dart';
-import 'package:dotted_border/dotted_border.dart';
+import 'dart:ui';
+import 'package:blog_club/gen/fonts.gen.dart';
+import 'package:blog_club/home.dart';
+import 'package:blog_club/splash.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 void main() {
+  SystemChrome.setSystemUIOverlayStyle(
+    const SystemUiOverlayStyle(
+      statusBarColor: Colors.white,
+      statusBarIconBrightness: Brightness.dark,
+      systemNavigationBarColor: Colors.white,
+      systemNavigationBarIconBrightness: Brightness.dark,
+    )
+  );
   runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
-  static const defaultfontfamily = 'Avenir';
-
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     const primeryTextColor = Color(0xff0D253C);
     const secendryTextColor = Color(0xff2D4379);
+    const primeryColor = Color(0xff376AED);
+    
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
       theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // Try running your application with "flutter run". You'll see the
-        // application has a blue toolbar. Then, without quitting the app, try
-        // changing the primarySwatch below to Colors.green and then invoke
-        // "hot reload" (press "r" in the console where you ran "flutter run",
-        // or simply save your changes to "hot reload" in a Flutter IDE).
-        // Notice that the counter didn't reset back to zero; the application
-        // is not restarted.
-        primarySwatch: Colors.blue,
+        textButtonTheme: TextButtonThemeData(
+          style: ButtonStyle(
+            textStyle: MaterialStateProperty.all(
+              const TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.w400,
+                fontFamily: FontFamily.avenir,
+              ),
+            ),
+          ),
+        ),
+        colorScheme: const ColorScheme.light(
+          primary: primeryColor,
+          onPrimary: Colors.white,
+          onSurface: primeryTextColor,
+          onBackground: primeryTextColor,
+          background:  Color(0xffFBFCFF),
+          surface: Colors.white,
+        ),
         textTheme: const TextTheme(
-          subtitle1: TextStyle(
-            color: secendryTextColor,
-            fontFamily: defaultfontfamily,
-            fontWeight: FontWeight.w200,
-            fontSize: 18,
-          ),
-          headline6: TextStyle(
-            fontFamily: defaultfontfamily,
-            fontWeight: FontWeight.bold,
-            color: primeryTextColor,
-            fontSize: 18.0,
-          ),
-          headline4: TextStyle(
-            fontFamily: defaultfontfamily,
-            fontSize: 24,
-            color: primeryTextColor,
-            fontWeight: FontWeight.w700,
-          ),
-          bodyText2: TextStyle(
-              fontFamily: defaultfontfamily,
+            subtitle1: TextStyle(
               color: secendryTextColor,
-              fontSize: 12),
-        ),
+              fontFamily: FontFamily.avenir,
+              fontWeight: FontWeight.w200,
+              fontSize: 18,
+            ),
+            subtitle2: TextStyle(
+              color: primeryTextColor,
+              fontFamily: FontFamily.avenir,
+              fontWeight: FontWeight.w400,
+              fontSize: 14,
+            ),
+            headline6: TextStyle(
+              fontFamily: FontFamily.avenir,
+              fontWeight: FontWeight.bold,
+              color: primeryTextColor,
+              fontSize: 18.0,
+            ),
+            headline5: TextStyle(
+              fontFamily: FontFamily.avenir,
+              fontSize: 20,
+              color: primeryTextColor,
+              fontWeight: FontWeight.w700,
+            ),
+            headline4: TextStyle(
+              fontFamily: FontFamily.avenir,
+              fontSize: 24,
+              color: primeryTextColor,
+              fontWeight: FontWeight.w700,
+            ),
+            bodyText2: TextStyle(
+                fontFamily: FontFamily.avenir,
+                color: secendryTextColor,
+                fontSize: 12),
+            caption: TextStyle(
+              fontFamily: FontFamily.avenir,
+              fontWeight: FontWeight.w700,
+              color: Color(0xff7B8BB2),
+              fontSize: 10,
+            )),
       ),
-      home: const HomeScreen(),
+      // home: Stack(
+      //   children: [
+      //     const Positioned.fill(child: HomeScreen()),
+      //     Positioned(bottom: 0, right: 0, left: 0, child: _ButtomNavigation()),
+      //   ],
+      // ),
+    home: const SplashScreen(),
     );
   }
 }
 
-class HomeScreen extends StatelessWidget {
-  const HomeScreen({Key? key}) : super(key: key);
-  // Size? size;
-  @override
-  Widget build(BuildContext context) {
-    final ThemeData themeData = Theme.of(context);
-    final stories = AppDatabase.stories;
-    // size = MediaQuery.of(context).size;
-    // final double height = size!.height;
-    // final double width = size!.width;
-    return Scaffold(
-      body: SafeArea(
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Padding(
-                padding: const EdgeInsets.fromLTRB(32, 16, 32, 0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      'Hi, Jonathan!',
-                      style: themeData.textTheme.subtitle1,
-                    ),
-                    Image.asset(
-                      'assets/img/icons/notification.png',
-                      width: 32,
-                      height: 32,
-                    ),
-                  ],
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.fromLTRB(32, 0, 0, 16),
-                child: Text(
-                  'Explore today’s',
-                  style: themeData.textTheme.headline4,
-                ),
-              ),
-              _StoryList(stories: stories),
-              const SizedBox(height: 16,),
-              _CategoryList()
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class _CategoryList extends StatelessWidget {
-  const _CategoryList({
-    Key? key,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    final categories = AppDatabase.categories;
-    return CarouselSlider.builder(
-      itemCount: categories.length,
-      itemBuilder: (BuildContext cotnext, int index, realIndex) {
-        return _CategoryItem(
-          left: realIndex == 0 ? 32 : 8,
-          right: realIndex == categories.length-1 ? 32 : 8,
-          category: categories[realIndex],
-        );
-      },
-      options: CarouselOptions(
-        scrollDirection: Axis.horizontal,
-        viewportFraction: 0.8,
-        aspectRatio: 1.2,
-        initialPage: 0,
-        disableCenter: true,
-        enableInfiniteScroll: false,
-        enlargeCenterPage: true,
-        padEnds: false,
-        scrollPhysics: const BouncingScrollPhysics(),
-        enlargeStrategy: CenterPageEnlargeStrategy.height,
-        // autoPlay: true,
-      ),
-    );
-  }
-}
-
-class _CategoryItem extends StatelessWidget {
-  const _CategoryItem({Key? key, required this.category,required this.left,required this.right,}) : super(key: key);
-  final double right;
-  final double left;
-  final Category category;
+class _ButtomNavigation extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.fromLTRB(left, 0, right, 0),
+      height: 85,
       child: Stack(
         children: [
-           Positioned.fill(
-            top: 100,
-            right: 65,
-            left: 65,
-            bottom: 24,
-              child: Container(
-            decoration: const BoxDecoration(
-              boxShadow: [
+          Positioned(
+            left: 0,
+            right: 0,
+            bottom: 0,
+            child: Container(
+              height: 65,
+              decoration: BoxDecoration(color: Colors.white, boxShadow: [
                 BoxShadow(
                   blurRadius: 20,
-                  color: Color(0xff0D253C),
-                )
-              ],
-            ),
-          )),
-
-          Positioned.fill(
-            child: Container(
-              margin: const EdgeInsets.fromLTRB(0,0,0,16),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(32.0),
-                color: Colors.blue,
-              ),
-              child: ClipRRect(
-                  borderRadius: BorderRadius.circular(32),
-                  child: Image.asset(
-                    'assets/img/posts/large/${category.imageFileName}',
-                    fit: BoxFit.cover,
-                  )),
-              foregroundDecoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(32.0),
-                gradient: const LinearGradient(
-                    begin: Alignment.bottomCenter,
-                    end: Alignment.center,
-                    colors: [
-                      Color(0xff0D253C),
-                      Colors.transparent,
-                    ]),
-              ),
-            ),
-          ),
-         
-          Positioned(
-            bottom: 48.0,
-            left: 32.0,
-            child: Text(
-              category.title,
-              style: Theme.of(context)
-                  .textTheme
-                  .headline6!
-                  .apply(color: Colors.white),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _StoryList extends StatelessWidget {
-  const _StoryList({
-    Key? key,
-    required this.stories,
-  }) : super(key: key);
-
-  final List<StoryData> stories;
-
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      height: 100,
-      width: MediaQuery.of(context).size.width,
-      child: ListView.builder(
-          itemCount: stories.length,
-          shrinkWrap: true,
-          scrollDirection: Axis.horizontal,
-          physics: const BouncingScrollPhysics(),
-          padding: const EdgeInsets.fromLTRB(23, 0, 23, 0),
-          itemBuilder: (BuildContext context, int index) {
-            final story = stories[index];
-            return _Story(story: story);
-          }),
-    );
-  }
-}
-
-class _Story extends StatelessWidget {
-  const _Story({
-    Key? key,
-    required this.story,
-  }) : super(key: key);
-
-  final StoryData story;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.fromLTRB(4.0, 2.0, 4.0, 0.0),
-      child: Column(
-        children: [
-          Stack(
-            children: [
-              story.isViewed ? _profileImageViewed() : _profileImageNormal(),
-              Positioned(
-                bottom: 0,
-                right: 0,
-                child: Image.asset(
-                  'assets/img/icons/${story.iconFileName}',
-                  height: 24,
-                  width: 24,
+                  color: const Color(0x009B8487).withOpacity(0.3),
                 ),
-              )
-            ],
+              ]),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: const [
+                  BottomNavigationItem(activeIconfileName: 'Home.png', iconFileName: 'Home.png', title: 'Home'),
+                  BottomNavigationItem(activeIconfileName: 'Articles.png', iconFileName: 'Articles.png', title: 'Articles'),
+                  SizedBox(width: 8,),
+                  BottomNavigationItem(activeIconfileName: 'Search.png', iconFileName: 'Search.png', title: 'Search'),
+                  BottomNavigationItem(activeIconfileName: 'Menu.png', iconFileName: 'Menu.png', title: 'Menu'),
+                ],
+              ),
+            ),
           ),
-          const SizedBox(
-            height: 8.0,
-          ),
-          Text(story.name),
+          Center(
+            child: Container(
+              alignment: Alignment.topCenter,
+              width: 65,
+              height: 85,
+              child: Container(
+                height: 65,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(32.5),
+                  border: Border.all(color: Colors.white,width: 4.0),
+                  color: const Color(0xff376AED),
+                ),
+                child: Image.asset('assets/img/icons/plus.png'),
+              ),
+            ),
+          )
         ],
       ),
     );
   }
+}
 
-  Widget _profileImageNormal() {
-    return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 8.0),
-      width: 68,
-      height: 68,
-      decoration: BoxDecoration(
-          gradient: const LinearGradient(
-            begin: Alignment.topLeft,
-            colors: [
-              Color(0xff376AED),
-              Color(0xff49B0E2),
-              Color(0xff9CECFB),
-            ],
-          ),
-          borderRadius: BorderRadius.circular(24.0)),
-      child: Container(
-        margin: const EdgeInsets.all(2.0),
-        padding: const EdgeInsets.all(5.0),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(22),
-          color: Colors.white,
+class BottomNavigationItem extends StatelessWidget {
+  const BottomNavigationItem({
+    Key? key,
+    required this.activeIconfileName,
+    required this.iconFileName,
+    required this.title,
+  }) : super(key: key);
+  final String iconFileName;
+  final String activeIconfileName;
+  final String title;
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Image.asset(
+          'assets/img/icons/$iconFileName',
         ),
-        child: _profileImage(),
-      ),
-    );
-  }
-
-  Widget _profileImageViewed() {
-    return SizedBox(
-      height: 68,
-      width: 68,
-      child: DottedBorder(
-        borderType: BorderType.RRect,
-        radius: const Radius.circular(24),
-        strokeWidth: 2.0,
-        color: const Color(0xff7B8BB2),
-        padding: const EdgeInsets.all(7.0),
-        dashPattern: const [8, 3],
-        child: Container(
-          // margin: const EdgeInsets.symmetric(horizontal: 8.0),
-          width: 68,
-          height: 68,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(24),
-          ),
-          child: _profileImage(),
+        const SizedBox(height: 4,),
+        Text(
+          title,
+          style: Theme.of(context).textTheme.caption,
         ),
-      ),
-    );
-  }
-
-  Widget _profileImage() {
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(17),
-      child: Image.asset(
-        'assets/img/stories/${story.imageFileName}',
-      ),
+      ],
     );
   }
 }
