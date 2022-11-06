@@ -1,4 +1,5 @@
 import 'package:blog_club/gen/assets.gen.dart';
+import 'package:blog_club/main.dart';
 import 'package:flutter/material.dart';
 
 class AuthScreen extends StatefulWidget {
@@ -137,7 +138,11 @@ class _Login extends StatelessWidget {
             height: 24.0,
           ),
           ElevatedButton(
-              onPressed: () {},
+              onPressed: () {
+                Navigator.of(context).pushReplacement(
+                  MaterialPageRoute(builder: (context) => const MainScreen()),
+                );
+              },
               style: ButtonStyle(
                 minimumSize: MaterialStateProperty.all(
                   Size(MediaQuery.of(context).size.width, 60.0),
@@ -220,7 +225,7 @@ class _SignUp extends StatelessWidget {
           const TextField(
             decoration: InputDecoration(label: Text('FullName')),
           ),
-           const TextField(
+          const TextField(
             decoration: InputDecoration(label: Text('UserName')),
           ),
           const PasswordTextField(),
@@ -228,7 +233,11 @@ class _SignUp extends StatelessWidget {
             height: 22.0,
           ),
           ElevatedButton(
-              onPressed: () {},
+              onPressed: () {
+                Navigator.of(context).pushReplacement(
+                  MaterialPageRoute(builder: (context) => const MainScreen()),
+                );
+              },
               style: ButtonStyle(
                 minimumSize: MaterialStateProperty.all(
                   Size(MediaQuery.of(context).size.width, 60.0),
@@ -240,7 +249,7 @@ class _SignUp extends StatelessWidget {
                 ),
               ),
               child: const Text('SIGN UP')),
-         const SizedBox(
+          const SizedBox(
             height: 8.0,
           ),
           const Center(

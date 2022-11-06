@@ -110,7 +110,7 @@ class MyApp extends StatelessWidget {
       //     Positioned(bottom: 0, right: 0, left: 0, child: _ButtomNavigation()),
       //   ],
       // ),
-      home: const MainScreen(),
+      home: const SplashScreen(),
     );
   }
 }

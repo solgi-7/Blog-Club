@@ -106,7 +106,8 @@ class ArticleScreen extends StatelessWidget {
                     style: themeData.textTheme.bodyText2,
                     textAlign: TextAlign.justify,
                   ),
-                )
+                ),
+                const SizedBox(height: 60,),
               ])),
             ],
           ),
@@ -130,7 +131,7 @@ class ArticleScreen extends StatelessWidget {
         ],
       ),
       floatingActionButton: Container(
-        margin: const EdgeInsets.only(bottom: 50),
+        margin: const EdgeInsets.only(bottom: 60),
         width: 111,
         height: 48,
         decoration: BoxDecoration(
